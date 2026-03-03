@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Instagram Non Followers Checker</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f2f2f2;
+text-align:center;
+padding:40px;
+}
+
+.container{
+background:white;
+padding:30px;
+border-radius:10px;
+max-width:600px;
+margin:auto;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+button{
+background:#ff2e63;
+color:white;
+border:none;
+padding:10px 20px;
+font-size:16px;
+border-radius:5px;
+cursor:pointer;
+}
+
+ul{
+text-align:left;
+margin-top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Instagram Non Followers Checker</h2>
+
+<p>Upload your Instagram files</p>
+
+<input type="file" id="followersFile"><br><br>
+
+<input type="file" id="followingFile"><br><br>
+
+<button onclick="check()">Check</button>
+
+<ul id="result"></ul>
+
+</div>
+
+<script>
+
+function readFile(file){
+return new Promise(resolve=>{
+const reader=new FileReader();
+reader.onload=e=>resolve(JSON.parse(e.target.result));
+reader.readAsText(file);
+});
+}
+
+async function check(){
+
+const followersFile=document.getElementById("followersFile").files[0];
+const followingFile=document.getElementById("followingFile").files[0];
+
+const followersData=await readFile(followersFile);
+const followingData=await readFile(followingFile);
+
+const followers=followersData.map(x=>x.string_list_data[0].value);
+const following=followingData.map(x=>x.string_list_data[0].value);
+
+const notFollowingBack=following.filter(x=>!followers.includes(x));
+
+const list=document.getElementById("result");
+list.innerHTML="";
+
+notFollowingBack.forEach(name=>{
+const li=document.createElement("li");
+li.textContent=name;
+list.appendChild(li);
+});
+
+}
+
+</script>
+
+</body>
+</html>
